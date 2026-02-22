@@ -101,42 +101,52 @@ async function playRaceEngine(character1, character2) {
     if (block === "CONFRONTO") {
       let powerResult1 = diceResult1 + character1.PODER;
       let powerResult2 = diceResult2 + character2.PODER;
+      
+      totalTestSkill1 = powerResult1;
+      totalTestSkill2 = powerResult2;
+      
+      let confrontoType = await getConfrontoType();
 
-      console.log(`${character1.NOME} confrontou com ${character2.NOME}! 🥊`);
+    console.log(`${character1.NOME} confrontou com ${character2.NOME}! 🥊`);
+    console.log(`Tipo de confronto: ${confrontoType}`);
+    
+    if (confrontoType === "BOMBA") {
+        console.log("💣 BOMBA! Efeito crítico!");
+    }
 
-      await logRollResult(
+    await logRollResult(
         character1.NOME,
         "poder",
         diceResult1,
         character1.PODER
-      );
+    );
 
-      await logRollResult(
+    await logRollResult(
         character2.NOME,
         "poder",
         diceResult2,
         character2.PODER
-      );
+    );
 
-      if (powerResult1 > powerResult2 && character2.PONTOS > 0) {
+    if (powerResult1 > powerResult2 && character2.PONTOS > 0) {
         console.log(
-          `${character1.NOME} venceu o confronto! ${character2.NOME} perdeu 1 ponto 🐢`
+            `${character1.NOME} venceu o confronto! ${character2.NOME} perdeu 1 ponto 🐢`
         );
         character2.PONTOS--;
-      }
+    }
 
-      if (powerResult2 > powerResult1 && character1.PONTOS > 0) {
+    if (powerResult2 > powerResult1 && character1.PONTOS > 0) {
         console.log(
-          `${character2.NOME} venceu o confronto! ${character1.NOME} perdeu 1 ponto 🐢`
+            `${character2.NOME} venceu o confronto! ${character1.NOME} perdeu 1 ponto 🐢`
         );
         character1.PONTOS--;
-      }
+    }
 
-      console.log(
+    console.log(
         powerResult2 === powerResult1
-          ? "Confronto empatado! Nenhum ponto foi perdido"
-          : ""
-      );
+            ? "Confronto empatado! Nenhum ponto foi perdido"
+            : ""
+    );
     }
 
     // verificando o vencedor
@@ -163,6 +173,10 @@ async function declareWinner(character1, character2) {
     console.log(`\n${character2.NOME} venceu a corrida! Parabéns! 🏆`);
   else console.log("A corrida terminou em empate");
 }
+async function getConfrontoType() {
+    let random = Math.random();
+    return random < 0.5 ? "CASCO" : "BOMBA";
+}
 
 (async function main() {
   console.log(
@@ -171,4 +185,4 @@ async function declareWinner(character1, character2) {
 
   await playRaceEngine(player1, player2);
   await declareWinner(player1, player2);
-})();
+})();      
